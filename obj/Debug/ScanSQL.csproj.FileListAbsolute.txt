@@ -1,0 +1,11 @@
+D:\ScanSQL\ScanSQL\bin\Debug\ScanSQL.exe.config
+D:\ScanSQL\ScanSQL\bin\Debug\ScanSQL.exe
+D:\ScanSQL\ScanSQL\bin\Debug\ScanSQL.pdb
+D:\ScanSQL\ScanSQL\obj\Debug\ScanSQL.csproj.AssemblyReference.cache
+D:\ScanSQL\ScanSQL\obj\Debug\ScanSQL.LoginForm.resources
+D:\ScanSQL\ScanSQL\obj\Debug\ScanSQL.MainForm.resources
+D:\ScanSQL\ScanSQL\obj\Debug\ScanSQL.Properties.Resources.resources
+D:\ScanSQL\ScanSQL\obj\Debug\ScanSQL.csproj.GenerateResource.cache
+D:\ScanSQL\ScanSQL\obj\Debug\ScanSQL.csproj.CoreCompileInputs.cache
+D:\ScanSQL\ScanSQL\obj\Debug\ScanSQL.exe
+D:\ScanSQL\ScanSQL\obj\Debug\ScanSQL.pdb
