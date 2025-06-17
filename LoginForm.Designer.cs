@@ -40,6 +40,8 @@
             this.ServerName = new System.Windows.Forms.Label();
             this.labelDBNamee = new System.Windows.Forms.Label();
             this.txtDBName = new System.Windows.Forms.TextBox();
+            this.lblProductMode = new System.Windows.Forms.Label();
+            this.cmbProductMode = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // Login
@@ -156,11 +158,30 @@
             this.txtDBName.TabIndex = 13;
             this.txtDBName.TextChanged += new System.EventHandler(this.txtDBName_TextChanged);
             // 
+            // lblProductMode
+            // 
+            this.lblProductMode.AutoSize = true;
+            this.lblProductMode.Location = new System.Drawing.Point(472, 134);
+            this.lblProductMode.Name = "lblProductMode";
+            this.lblProductMode.Size = new System.Drawing.Size(71, 13);
+            this.lblProductMode.TabIndex = 14;
+            this.lblProductMode.Text = "Product Type";
+            // 
+            // cmbProductMode
+            // 
+            this.cmbProductMode.FormattingEnabled = true;
+            this.cmbProductMode.Location = new System.Drawing.Point(475, 160);
+            this.cmbProductMode.Name = "cmbProductMode";
+            this.cmbProductMode.Size = new System.Drawing.Size(64, 21);
+            this.cmbProductMode.TabIndex = 15;
+            // 
             // LoginForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.cmbProductMode);
+            this.Controls.Add(this.lblProductMode);
             this.Controls.Add(this.txtDBName);
             this.Controls.Add(this.labelDBNamee);
             this.Controls.Add(this.ServerName);
@@ -196,5 +217,7 @@
         private System.Windows.Forms.Label ServerName;
         private System.Windows.Forms.Label labelDBNamee;
         private System.Windows.Forms.TextBox txtDBName;
+        private System.Windows.Forms.Label lblProductMode;
+        public System.Windows.Forms.ComboBox cmbProductMode;
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using ScanSQL.Enums;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Windows.Forms;
 
@@ -17,7 +18,8 @@ namespace ScanSQL
         private int _index = 0;
         public OutputLog(LoginForm loginView,
                          ConnectionService connectionService,
-                         MainForm mainView) : base(loginView, connectionService, mainView)
+                         MainForm mainView,
+                         ProducteMode mode) : base(loginView, connectionService, mainView, mode)
         {
 
         }
@@ -81,26 +83,28 @@ namespace ScanSQL
                 {
                     using (var reader = command.ExecuteReader())
                     {
-                        if (reader.HasRows)
-                        {
-                            _index++;
-                            _pageNumber = StringFormat("Page", _index.ToString());
-                            _mainView.Log("________________________________________________________________________________________________________________________________________________");
-                            _mainView.Log(_pageNumber);
-                            _mainView.Log("________________________________________________________________________________________________________________________________________________");
+                        //if (reader.HasRows)
+                        //{
+                        _index++;
+                        _pageNumber = StringFormat("Page", _index.ToString());
+                        _mainView.Log("________________________________________________________________________________________________________________________________________________");
+                        _mainView.Log(_pageNumber);
+                        _mainView.Log("________________________________________________________________________________________________________________________________________________");
+                        _mainView.Log("Scanning tables where triggers work.");
 
-                            //Add output to list to track it
-                            _outputList.Add(_pageNumber);
-                            _outputList.Add("________________________________________________________________________________________________________________________________________________");
-                        }
-                        else
-                        {
-                            _mainView.Log("________________________________________________________________________________________________________________________________________________");
-                            _mainView.Log("AuditLog table is empty. \r\n" +
-                                          "Create, update or delete data to see the output");
-                            _mainView.Log("________________________________________________________________________________________________________________________________________________");
-                            return;
-                        }
+                        //Add output to list to track it
+                        _outputList.Add(_pageNumber);
+                        _outputList.Add("________________________________________________________________________________________________________________________________________________");
+                        _outputList.Add("Scanning tables where triggers work.");
+                        //}
+                        //else
+                        //{
+                        //    _mainView.Log("________________________________________________________________________________________________________________________________________________");
+                        //    _mainView.Log("AuditLog table is empty. \r\n" +
+                        //                  "Create, update or delete data to see the output");
+                        //    _mainView.Log("________________________________________________________________________________________________________________________________________________");
+                        //    return;
+                        //}
 
                         while (reader.Read())
                         {
@@ -125,11 +129,21 @@ namespace ScanSQL
                             _outputList.Add(_newValuesFormatted);
                             _outputList.Add("________________________________________________________________________________________________________________________________________________");
                         }
-
-                        //Add list to stuck
-                        _firstStuck.Push(_outputList);
                     }
                 }
+                // For bank version
+                _mainView.Log("________________________________________________________________________________________________________________________________________________");
+                _mainView.Log("Scanning tables where triggers doesnt work. Please wait unill you see FINISH.");
+                var changedTables = CheckTablesWithoutTrigger();
+                _mainView.Log(changedTables);
+                _mainView.Log("FINISH FINISH FINISH");
+
+                _outputList.Add("________________________________________________________________________________________________________________________________________________");
+                _outputList.Add("Scanning tables where triggers doesnt work. Please wait unill you see FINISH.");
+                _outputList.Add(changedTables);
+
+                //Add list to stuck
+                _firstStuck.Push(_outputList);
                 //After Logging output, empty AuditLog table
                 TruncateAuditLogTable();
             }
@@ -184,6 +198,8 @@ namespace ScanSQL
             _firstStuck = new Stack<List<string>>();
             _secondStuck = new Stack<List<string>>();
             _index = 0;
+            // For bank version
+            ResetTables();
         }
     }
 }

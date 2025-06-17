@@ -67,6 +67,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConnectionService.cs" />
+    <Compile Include="Enums\ProducteMode.cs" />
     <Compile Include="Login.cs" />
     <Compile Include="LoginForm.cs">
       <SubType>Form</SubType>
@@ -128,5 +129,6 @@
   <ItemGroup>
     <Content Include="gitignore.txt" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

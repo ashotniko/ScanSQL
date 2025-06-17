@@ -1,6 +1,8 @@
-﻿using System;
+﻿using ScanSQL.Enums;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace ScanSQL
@@ -11,19 +13,60 @@ namespace ScanSQL
         internal MainForm _mainView;
         internal ConnectionService _connectionService;
         internal SettingsSQL _settings;
-        public HashSet<string> availableTables = new HashSet<string>(163);
+        private ProducteMode _mode;
+        public HashSet<string> AvailableTables = new HashSet<string>(163);
+        public Dictionary<string, int?> LastTables;  // For this tables doesnt create triggers because there is conflict between  created triggers and bank product triggers
+        private bool _firstTime;
 
-        private const string _getAllTablesSqlCfgKey = "GetAllTablesSql";
         public string GetAllTablesSql { get; set; }
 
         public Scanning(LoginForm loginView,
                         ConnectionService connectionService,
-                        MainForm mainView) : base(loginView, connectionService)
+                        MainForm mainView,
+                        ProducteMode mode) : base(loginView, connectionService)
         {
             _connectionService = connectionService;
             _loginView = loginView;
             _mainView = mainView;
             _settings = new SettingsSQL();
+            _firstTime = true;
+            _mode = mode;
+            if (_mode == ProducteMode.Bank)
+            {
+                LastTables = new Dictionary<string, int?>()
+                {
+                    { "BLACKLISTCHANGEREQUESTS", 0},
+                    { "BLACKLIST", 0},
+                    { "ACTRANS", 0},
+                    { "TEMPLATESMAPPING", 0},
+                    { "TEMPLATES", 0},
+                    { "USERSET", 0},
+                    { "DAHKCATCH", 0},
+                    { "DAHKFREEATTACH", 0},
+                    { "SYSDEF", 0},
+                    { "DCR", 0},
+                    { "CB_PROCERRORS", 0},
+                    { "CB_MESSAGES", 0},
+                    { "OLAPEXPORTLOG", 0},
+                    { "COM_PAYMENTS", 0},
+                    { "UNITTESTLOG", 0},
+                    { "TIMESTAMP", 0}
+                };
+            }
+            else if (_mode == ProducteMode.Enterprise)
+            {
+                LastTables = new Dictionary<string, int?>()
+                {
+                    { "APICLIENTINFO", 0},
+                    { "DCR", 0},
+                    { "SESSIONINFO", 0},
+                    { "SYSDEF", 0},
+                    { "TEMPLATES", 0},
+                    { "APPRCONFIGBYUSER", 0},
+                    { "FAHI", 0},
+                    { "MTREST", 0}
+                };
+            }
         }
 
         internal void GetAllTables()
@@ -37,7 +80,10 @@ namespace ScanSQL
                         while (reader.Read())
                         {
                             var TableName = FormatTableNames(reader[0].ToString());
-                            availableTables.Add(TableName);
+                            if (!LastTables.ContainsKey(TableName))
+                            {
+                                AvailableTables.Add(TableName);
+                            }
                         }
                     }
                 }
@@ -47,7 +93,7 @@ namespace ScanSQL
                                     "Error", MessageBoxButtons.OK,
                                     MessageBoxIcon.Error);
 
-                    availableTables = new HashSet<string>(163);
+                    AvailableTables = new HashSet<string>(163);
                 }
             }
         }
@@ -55,7 +101,7 @@ namespace ScanSQL
         internal void CreateTrigger()
         {
             string query;
-            foreach (var table in availableTables)
+            foreach (var table in AvailableTables)
             {
                 //Check trigger exists in table, if not exists - Create
                 //Create trigger for insert
@@ -98,14 +144,15 @@ namespace ScanSQL
                     break;
                 default:
                     throw new ArgumentException("invalid trigger");
-            };
+            }
+            ;
             return query;
         }
 
         internal void RemoveTriggers()
         {
             string query;
-            foreach (var table in availableTables)
+            foreach (var table in AvailableTables)
             {
                 //Remove insert trigger  
                 query = RemoveTriggersHelper("insert", table);
@@ -137,7 +184,8 @@ namespace ScanSQL
                     break;
                 default:
                     throw new ArgumentException("invalid trigger");
-            };
+            }
+            ;
             return query;
         }
 
@@ -199,10 +247,108 @@ namespace ScanSQL
             }
         }
 
+        public int? ExecuteScalarQuery(string connectionString, string query)
+        {
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                using (var command = new SqlCommand(query, connection))
+                {
+                    return command.ExecuteScalar() as Int32?;
+                }
+            }
+        }
+
         private string FormatTableNames(string tableName)
         {
             var index = tableName.IndexOf('.') + 2;
             return tableName.Substring(index, tableName.Length - (index + 1));
+        }
+
+        // For bank version 
+        public string CheckTablesWithoutTrigger()
+        {
+            var returnedValue = string.Empty;
+
+            foreach (var kvp in LastTables.ToList())
+            {
+                var table = kvp.Key;
+                var query = String.Format(_settings._getCheckSumDefault, table);
+
+                Int32? checksum = 0;
+                try
+                {
+                    checksum = ExecuteScalarQuery(_loginView.ConnectionString, query);
+                }
+                catch (Exception e)
+                {
+
+                    _mainView.Log(e.Message + " TABLE " + table);
+                    _mainView.Log("QUERY: " + query);
+                    continue;
+                }
+
+                bool printchanged = false;
+
+                if (kvp.Value != checksum && checksum != null)
+                {
+                    printchanged = true;
+                    LastTables[table] = checksum;
+                }
+
+                if (printchanged && !_firstTime)
+                {
+                    returnedValue += $"CHANGE in TABLE: {table}\r\n";
+                }
+            }
+            _firstTime = false;
+
+            if (returnedValue == string.Empty)
+            {
+                return "Nothing changed in tables where triggers doesnt work. \r\n";
+            }
+            return returnedValue;
+        }
+
+        public void ResetTables()
+        {
+            if (_mode == ProducteMode.Bank)
+            {
+                LastTables = new Dictionary<string, int?>()
+                {
+                    { "BLACKLISTCHANGEREQUESTS", 0},
+                    { "BLACKLIST", 0},
+                    { "ACTRANS", 0},
+                    { "TEMPLATESMAPPING", 0},
+                    { "TEMPLATES", 0},
+                    { "USERSET", 0},
+                    { "DAHKCATCH", 0},
+                    { "DAHKFREEATTACH", 0},
+                    { "SYSDEF", 0},
+                    { "DCR", 0},
+                    { "CB_PROCERRORS", 0},
+                    { "CB_MESSAGES", 0},
+                    { "OLAPEXPORTLOG", 0},
+                    { "COM_PAYMENTS", 0},
+                    { "UNITTESTLOG", 0},
+                    { "TIMESTAMP", 0}
+                };
+            }
+            else if (_mode == ProducteMode.Enterprise)
+            {
+                LastTables = new Dictionary<string, int?>()
+                {
+                    { "APICLIENTINFO", 0},
+                    { "DCR", 0},
+                    { "SESSIONINFO", 0},
+                    { "SYSDEF", 0},
+                    { "TEMPLATES", 0},
+                    { "APPRCONFIGBYUSER", 0},
+                    { "FAHI", 0},
+                    { "IBTRANSACTIONS", 0},
+                    { "MTREST", 0}
+                };
+            }
         }
     }
 }

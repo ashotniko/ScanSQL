@@ -7,7 +7,6 @@ namespace ScanSQL
 {
     public class ConnectionService
     {
-
         public SqlConnection SqlConnection { get; private set; }
 
         public bool TryConnect(string connectionString)

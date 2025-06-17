@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using ScanSQL.Enums;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace ScanSQL
@@ -14,8 +15,8 @@ namespace ScanSQL
         public MainForm(LoginForm loginForm, ConnectionService connectionService)
         {
             _connectionService = connectionService;
-            _scan = new Scanning(loginForm, _connectionService, this);
-            _output = new OutputLog(loginForm, _connectionService, this);
+            _scan = new Scanning(loginForm, _connectionService, this, (ProducteMode)loginForm.cmbProductMode.SelectedItem);
+            _output = new OutputLog(loginForm, _connectionService, this, (ProducteMode)loginForm.cmbProductMode.SelectedItem);
             InitializeComponent();
         }
 

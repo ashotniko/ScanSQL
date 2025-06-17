@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ScanSQL.Enums;
+using System;
 using System.Windows.Forms;
 
 namespace ScanSQL
@@ -54,6 +55,7 @@ namespace ScanSQL
                 Properties.Settings.Default.Login = txtLogin.Text;
                 Properties.Settings.Default.Password = txtPassword.Text;
                 Properties.Settings.Default.RememberMe = true;
+                Properties.Settings.Default.ProductMode = cmbProductMode.SelectedItem.ToString();
                 Properties.Settings.Default.Save();
             }
             else
@@ -63,6 +65,7 @@ namespace ScanSQL
                 Properties.Settings.Default.Login = string.Empty;
                 Properties.Settings.Default.Password = string.Empty;
                 Properties.Settings.Default.RememberMe = false;
+                Properties.Settings.Default.ProductMode = ProducteMode.Enterprise.ToString();
                 Properties.Settings.Default.Save();
             }
 
@@ -73,7 +76,8 @@ namespace ScanSQL
                 DialogResult = DialogResult.OK;
                 _clickOnLogin = true;
                 Close();
-            };
+            }
+            ;
         }
 
         private void txtServerName_TextChanged(object sender, EventArgs e)
@@ -113,6 +117,8 @@ namespace ScanSQL
 
         private void LoginForm_Load(object sender, EventArgs e)
         {
+            cmbProductMode.DataSource = Enum.GetValues(typeof(ProducteMode));
+            cmbProductMode.SelectedItem = ProducteMode.Enterprise; // Default selection
             if (Properties.Settings.Default.RememberMe)
             {
                 txtServerName.Text = Properties.Settings.Default.ServerName;
@@ -120,7 +126,13 @@ namespace ScanSQL
                 txtLogin.Text = Properties.Settings.Default.Login;
                 txtPassword.Text = Properties.Settings.Default.Password;
                 rememberMeChkBox.Checked = Properties.Settings.Default.RememberMe;
+
+                if (Enum.TryParse(Properties.Settings.Default.ProductMode, out ProducteMode savedMode))
+                {
+                    cmbProductMode.SelectedItem = savedMode;
+                }
             }
+
         }
 
         private void txtDBName_TextChanged(object sender, EventArgs e)

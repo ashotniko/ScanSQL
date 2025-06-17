@@ -154,6 +154,8 @@
                 WHERE NOT (OldValues IS NULL AND NewValues IS NULL)
                 ORDER BY TableName";
 
+        public string _getCheckSumDefault = @"SELECT CHECKSUM_AGG(BINARY_CHECKSUM(*)) FROM  {0} WITH (NOLOCK)";
+
         #endregion
     }
 }
