@@ -14,7 +14,8 @@ namespace ScanSQL
         internal ConnectionService _connectionService;
         internal SettingsSQL _settings;
         private ProducteMode _mode;
-        public HashSet<string> AvailableTables = new HashSet<string>(163);
+        public HashSet<string> AvailableTables = new HashSet<string>();
+
         public Dictionary<string, int?> LastTables;  // For this tables doesnt create triggers because there is conflict between  created triggers and bank product triggers
         private bool _firstTime;
 
@@ -35,21 +36,17 @@ namespace ScanSQL
             {
                 LastTables = new Dictionary<string, int?>()
                 {
-                    { "BLACKLISTCHANGEREQUESTS", 0},
                     { "BLACKLIST", 0},
                     { "ACTRANS", 0},
                     { "TEMPLATESMAPPING", 0},
                     { "TEMPLATES", 0},
-                    { "USERSET", 0},
                     { "DAHKCATCH", 0},
                     { "DAHKFREEATTACH", 0},
                     { "SYSDEF", 0},
                     { "DCR", 0},
                     { "CB_PROCERRORS", 0},
                     { "CB_MESSAGES", 0},
-                    { "OLAPEXPORTLOG", 0},
                     { "COM_PAYMENTS", 0},
-                    { "UNITTESTLOG", 0},
                     { "TIMESTAMP", 0}
                 };
             }
@@ -57,13 +54,8 @@ namespace ScanSQL
             {
                 LastTables = new Dictionary<string, int?>()
                 {
-                    { "APICLIENTINFO", 0},
-                    { "DCR", 0},
-                    { "SESSIONINFO", 0},
-                    { "SYSDEF", 0},
-                    { "TEMPLATES", 0},
-                    { "APPRCONFIGBYUSER", 0},
                     { "FAHI", 0},
+                    { "IBTRANSACTIONS", 0},
                     { "MTREST", 0}
                 };
             }
@@ -316,21 +308,17 @@ namespace ScanSQL
             {
                 LastTables = new Dictionary<string, int?>()
                 {
-                    { "BLACKLISTCHANGEREQUESTS", 0},
                     { "BLACKLIST", 0},
                     { "ACTRANS", 0},
                     { "TEMPLATESMAPPING", 0},
                     { "TEMPLATES", 0},
-                    { "USERSET", 0},
                     { "DAHKCATCH", 0},
                     { "DAHKFREEATTACH", 0},
                     { "SYSDEF", 0},
                     { "DCR", 0},
                     { "CB_PROCERRORS", 0},
                     { "CB_MESSAGES", 0},
-                    { "OLAPEXPORTLOG", 0},
                     { "COM_PAYMENTS", 0},
-                    { "UNITTESTLOG", 0},
                     { "TIMESTAMP", 0}
                 };
             }
@@ -338,12 +326,6 @@ namespace ScanSQL
             {
                 LastTables = new Dictionary<string, int?>()
                 {
-                    { "APICLIENTINFO", 0},
-                    { "DCR", 0},
-                    { "SESSIONINFO", 0},
-                    { "SYSDEF", 0},
-                    { "TEMPLATES", 0},
-                    { "APPRCONFIGBYUSER", 0},
                     { "FAHI", 0},
                     { "IBTRANSACTIONS", 0},
                     { "MTREST", 0}

@@ -9,3 +9,4 @@ D:\ScanSQL\ScanSQL\obj\Debug\ScanSQL.csproj.GenerateResource.cache
 D:\ScanSQL\ScanSQL\obj\Debug\ScanSQL.csproj.CoreCompileInputs.cache
 D:\ScanSQL\ScanSQL\obj\Debug\ScanSQL.exe
 D:\ScanSQL\ScanSQL\obj\Debug\ScanSQL.pdb
+D:\ScanSQL\ScanSQL\obj\Debug\ScanSQL.exe.config
