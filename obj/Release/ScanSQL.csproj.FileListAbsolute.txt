@@ -1,5 +1,6 @@
-D:\ScanSQL\ScanSQL\bin\Release\ScanSQL.exe
 D:\ScanSQL\ScanSQL\bin\Release\ScanSQL.exe.config
+D:\ScanSQL\ScanSQL\bin\Release\ScanSQL.exe
+D:\ScanSQL\ScanSQL\bin\Release\ScanSQL.pdb
 D:\ScanSQL\ScanSQL\obj\Release\ScanSQL.csproj.AssemblyReference.cache
 D:\ScanSQL\ScanSQL\obj\Release\ScanSQL.LoginForm.resources
 D:\ScanSQL\ScanSQL\obj\Release\ScanSQL.MainForm.resources
@@ -8,4 +9,3 @@ D:\ScanSQL\ScanSQL\obj\Release\ScanSQL.csproj.GenerateResource.cache
 D:\ScanSQL\ScanSQL\obj\Release\ScanSQL.csproj.CoreCompileInputs.cache
 D:\ScanSQL\ScanSQL\obj\Release\ScanSQL.exe
 D:\ScanSQL\ScanSQL\obj\Release\ScanSQL.pdb
-D:\ScanSQL\ScanSQL\bin\Release\ScanSQL.pdb
